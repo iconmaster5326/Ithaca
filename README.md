@@ -66,14 +66,16 @@ Yes.
 (define/type <promise>)
 
 (define/macro (delay . body)
-  `(let (forced? #f value #v)
-    (new <promise> (func ()
-      (unless forced?
-        (set! forced? #t)
-        (set! value (begin @,body))
-      )
-      value
-    ))
+  (let (forced? (symbol) value (symbol))
+  `(let (,forced? #f ,value #v)
+     (new <promise> (func ()
+        (unless ,forced?
+          (set! ,forced? #t)
+          (set! ,value (begin @,body))
+        )
+        ,value
+     ))
+    )
   )
 )
 
