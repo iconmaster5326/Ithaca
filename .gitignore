@@ -1,0 +1,9 @@
+# gradle files
+/.gradle/
+
+# eclispe files
+/bin/
+/build/
+/.settings/
+/.classpath
+/.project
