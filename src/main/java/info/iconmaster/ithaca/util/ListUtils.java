@@ -34,6 +34,19 @@ public class ListUtils {
 		return result;
 	}
 	
+	public static List<IthacaObject> unwrapDottedList(IthacaObject o) {
+		IthacaObject lst = o;
+		List<IthacaObject> result = new ArrayList<>();
+		while (lst instanceof IthacaPair) {
+			IthacaPair pair = (IthacaPair) lst;
+			result.add(pair.head);
+			lst = pair.tail;
+		}
+		
+		result.add(lst);
+		return result;
+	}
+	
 	public static IthacaObject wrapList(IthacaObject... os) {
 		IthacaObject result = IthacaNull.NULL;
 		for (int i = os.length-1; i >= 0; i--) {

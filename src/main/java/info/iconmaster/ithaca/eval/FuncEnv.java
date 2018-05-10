@@ -1,11 +1,60 @@
 package info.iconmaster.ithaca.eval;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import info.iconmaster.ithaca.object.IthacaObject;
+import info.iconmaster.ithaca.object.IthacaSymbol;
 
 public class FuncEnv {
-	public Set<FuncEnv> parents;
-	public Map<String, IthacaObject> bindings;
+	public List<FuncEnv> parents = new ArrayList<>();
+	public Map<IthacaSymbol, IthacaObject> bindings = new HashMap<>();
+	
+	public FuncEnv() {}
+	public FuncEnv(FuncEnv... parents) {
+		this.parents.addAll(Arrays.asList(parents));
+	}
+	
+	public boolean isBound(IthacaSymbol symbol) {
+		return getBinding(symbol) != null;
+	}
+	
+	public IthacaObject getBinding(IthacaSymbol symbol) {
+		if (bindings.containsKey(symbol)) {
+			return bindings.get(symbol);
+		} else {
+			for (FuncEnv fenv : parents) {
+				IthacaObject result = fenv.getBinding(symbol);
+				if (result != null) return result;
+			}
+			
+			return null;
+		}
+	}
+	
+	public void defineBinding(IthacaSymbol symbol, IthacaObject value) {
+		bindings.put(symbol, value);
+	}
+	
+	private boolean setBindingImpl(IthacaSymbol symbol, IthacaObject value) {
+		if (bindings.containsKey(symbol)) {
+			bindings.put(symbol, value);
+			return true;
+		} else {
+			for (FuncEnv fenv : parents) {
+				if (fenv.setBindingImpl(symbol, value)) return true;
+			}
+			
+			return false;
+		}
+	}
+	
+	public void setBinding(IthacaSymbol symbol, IthacaObject value) {
+		if (!setBindingImpl(symbol, value)) {
+			throw new IllegalArgumentException("attempt to set a nonexistent binding: "+symbol);
+		}
+	}
 }

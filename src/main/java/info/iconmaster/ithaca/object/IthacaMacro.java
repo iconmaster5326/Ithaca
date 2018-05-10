@@ -9,6 +9,7 @@ public abstract class IthacaMacro extends IthacaObject implements IthacaRunnable
 	
 	@Override
 	public void call(IthacaThread thread, IthacaObject argList) {
-		thread.frames.push(new EvalStackFrame(thread, callMacro(thread, argList)));
+		IthacaObject result = callMacro(thread, argList);
+		if (result != null) thread.frames.push(new EvalStackFrame(thread, result));
 	}
 }

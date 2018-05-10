@@ -11,6 +11,11 @@ public class EvalStackFrame extends StackFrame {
 		super(thread);
 		this.form = form;
 	}
+	
+	public EvalStackFrame(IthacaThread thread, FuncEnv fenv, IthacaObject form) {
+		super(thread, fenv);
+		this.form = form;
+	}
 
 	@Override
 	public void step() {
@@ -28,7 +33,14 @@ public class EvalStackFrame extends StackFrame {
 			thread.frames.pop();
 			procedure.call(thread, argList);
 		} else if (form instanceof IthacaSymbol) {
-			// TODO
+			// look it up in the scope
+			IthacaObject value = fenv.getBinding((IthacaSymbol)form);
+			if (value == null) {
+				throw new IllegalArgumentException("Unbound symbol: "+form);
+			}
+			
+			thread.recieved = value;
+			thread.frames.pop();
 		} else {
 			thread.frames.pop();
 			thread.recieved = form;

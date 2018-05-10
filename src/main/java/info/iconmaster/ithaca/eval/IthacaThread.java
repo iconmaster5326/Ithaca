@@ -7,6 +7,26 @@ import info.iconmaster.ithaca.object.IthacaObject;
 public class IthacaThread {
 	public Stack<StackFrame> frames = new Stack<>();
 	public IthacaObject recieved;
+	public FuncEnv globalFenv;
+	
+	public IthacaThread(FuncEnv fenv) {
+		this.globalFenv = fenv;
+	}
+	
+	public IthacaThread(StackFrame init) {
+		this.globalFenv = init.fenv;
+		frames.push(init);
+	}
+	
+	public IthacaThread(StackFrame init, FuncEnv fenv) {
+		this.globalFenv = fenv;
+		frames.push(init);
+	}
+	
+	public IthacaThread(IthacaObject form, FuncEnv fenv) {
+		this.globalFenv = fenv;
+		frames.push(new EvalStackFrame(this, fenv, form));
+	}
 	
 	public void step() {
 		if (done()) throw new RuntimeException("Attempted to run a stopped Ithaca thread");
@@ -29,5 +49,9 @@ public class IthacaThread {
 		}
 		
 		return recieved;
+	}
+	
+	public FuncEnv fenv() {
+		return frames.isEmpty() ? globalFenv : frames.peek().fenv;
 	}
 }
