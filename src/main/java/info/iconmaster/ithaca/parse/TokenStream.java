@@ -1,5 +1,6 @@
 package info.iconmaster.ithaca.parse;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,6 +16,14 @@ public class TokenStream {
 	
 	public TokenStream(InputStream in) {
 		isr = new InputStreamReader(in, StandardCharsets.UTF_8);
+	}
+	
+	public TokenStream(InputStreamReader isr) {
+		this.isr = isr;
+	}
+	
+	public TokenStream(String s) {
+		this.isr = new InputStreamReader(new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8)));
 	}
 	
 	/**
