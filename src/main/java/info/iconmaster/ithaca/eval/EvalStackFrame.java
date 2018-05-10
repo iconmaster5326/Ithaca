@@ -12,8 +12,8 @@ public class EvalStackFrame extends StackFrame {
 		this.form = form;
 	}
 	
-	public EvalStackFrame(IthacaThread thread, FuncEnv fenv, IthacaObject form) {
-		super(thread, fenv);
+	public EvalStackFrame(IthacaThread thread, Scope scope, IthacaObject form) {
+		super(thread, scope);
 		this.form = form;
 	}
 
@@ -34,7 +34,7 @@ public class EvalStackFrame extends StackFrame {
 			procedure.call(thread, argList);
 		} else if (form instanceof IthacaSymbol) {
 			// look it up in the scope
-			IthacaObject value = fenv.getBinding((IthacaSymbol)form);
+			IthacaObject value = scope.getBinding((IthacaSymbol)form);
 			if (value == null) {
 				throw new IllegalArgumentException("Unbound symbol: "+form);
 			}

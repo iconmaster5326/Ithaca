@@ -2,7 +2,7 @@ package info.iconmaster.ithaca;
 
 import java.io.IOException;
 
-import info.iconmaster.ithaca.eval.FuncEnv;
+import info.iconmaster.ithaca.eval.Scope;
 import info.iconmaster.ithaca.eval.IthacaThread;
 import info.iconmaster.ithaca.library.FuncBegin;
 import info.iconmaster.ithaca.library.MacroDefine;
@@ -20,7 +20,7 @@ public class Ithaca {
 						),
 						IthacaSymbol.intern("x")
 				)
-		, new FuncEnv());
+		, new Scope());
 		System.out.println(thread.run());
 	}
 }

@@ -19,7 +19,7 @@ public class MacroDefine extends IthacaMacro {
 		thread.frames.push(new StackFrame(thread) {
 			@Override
 			public void step() {
-				thread.fenv().defineBinding((IthacaSymbol) args.get(0), thread.recieved);
+				thread.scope().defineBinding((IthacaSymbol) args.get(0), thread.recieved);
 				thread.recieved = IthacaVoid.VOID;
 				thread.frames.pop();
 			}

@@ -7,25 +7,25 @@ import info.iconmaster.ithaca.object.IthacaObject;
 public class IthacaThread {
 	public Stack<StackFrame> frames = new Stack<>();
 	public IthacaObject recieved;
-	public FuncEnv globalFenv;
+	public Scope globalFenv;
 	
-	public IthacaThread(FuncEnv fenv) {
-		this.globalFenv = fenv;
+	public IthacaThread(Scope scope) {
+		this.globalFenv = scope;
 	}
 	
 	public IthacaThread(StackFrame init) {
-		this.globalFenv = init.fenv;
+		this.globalFenv = init.scope;
 		frames.push(init);
 	}
 	
-	public IthacaThread(StackFrame init, FuncEnv fenv) {
-		this.globalFenv = fenv;
+	public IthacaThread(StackFrame init, Scope scope) {
+		this.globalFenv = scope;
 		frames.push(init);
 	}
 	
-	public IthacaThread(IthacaObject form, FuncEnv fenv) {
-		this.globalFenv = fenv;
-		frames.push(new EvalStackFrame(this, fenv, form));
+	public IthacaThread(IthacaObject form, Scope scope) {
+		this.globalFenv = scope;
+		frames.push(new EvalStackFrame(this, scope, form));
 	}
 	
 	public void step() {
@@ -51,7 +51,7 @@ public class IthacaThread {
 		return recieved;
 	}
 	
-	public FuncEnv fenv() {
-		return frames.isEmpty() ? globalFenv : frames.peek().fenv;
+	public Scope scope() {
+		return frames.isEmpty() ? globalFenv : frames.peek().scope;
 	}
 }

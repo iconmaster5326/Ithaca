@@ -9,12 +9,12 @@ import java.util.Map;
 import info.iconmaster.ithaca.object.IthacaObject;
 import info.iconmaster.ithaca.object.IthacaSymbol;
 
-public class FuncEnv {
-	public List<FuncEnv> parents = new ArrayList<>();
+public class Scope {
+	public List<Scope> parents = new ArrayList<>();
 	public Map<IthacaSymbol, IthacaObject> bindings = new HashMap<>();
 	
-	public FuncEnv() {}
-	public FuncEnv(FuncEnv... parents) {
+	public Scope() {}
+	public Scope(Scope... parents) {
 		this.parents.addAll(Arrays.asList(parents));
 	}
 	
@@ -26,8 +26,8 @@ public class FuncEnv {
 		if (bindings.containsKey(symbol)) {
 			return bindings.get(symbol);
 		} else {
-			for (FuncEnv fenv : parents) {
-				IthacaObject result = fenv.getBinding(symbol);
+			for (Scope scope : parents) {
+				IthacaObject result = scope.getBinding(symbol);
 				if (result != null) return result;
 			}
 			
@@ -44,8 +44,8 @@ public class FuncEnv {
 			bindings.put(symbol, value);
 			return true;
 		} else {
-			for (FuncEnv fenv : parents) {
-				if (fenv.setBindingImpl(symbol, value)) return true;
+			for (Scope scope : parents) {
+				if (scope.setBindingImpl(symbol, value)) return true;
 			}
 			
 			return false;
