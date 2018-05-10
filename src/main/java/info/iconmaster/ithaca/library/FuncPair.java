@@ -8,7 +8,7 @@ import info.iconmaster.ithaca.object.IthacaObject;
 import info.iconmaster.ithaca.object.IthacaPair;
 import info.iconmaster.ithaca.util.ListUtils;
 
-public class FuncCons extends IthacaFunc {
+public class FuncPair extends IthacaFunc {
 	@Override
 	public IthacaObject callFunc(IthacaThread thread, IthacaObject argList) {
 		List<IthacaObject> args = ListUtils.unwrapProperList(argList);
