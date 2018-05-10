@@ -51,4 +51,24 @@ public class ListUtils {
 		}
 		return result;
 	}
+	
+	public static IthacaObject wrapDottedList(IthacaObject... os) {
+		if (os.length == 0) return IthacaNull.NULL;
+		IthacaObject result = os[os.length-1];
+		for (int i = os.length-2; i >= 0; i--) {
+			IthacaObject o = os[i];
+			result = new IthacaPair(o, result);
+		}
+		return result;
+	}
+	
+	public static IthacaObject wrapDottedList(List<IthacaObject> os) {
+		if (os.isEmpty()) return IthacaNull.NULL;
+		IthacaObject result = os.get(os.size()-1);
+		for (int i = os.size()-2; i >= 0; i--) {
+			IthacaObject o = os.get(i);
+			result = new IthacaPair(o, result);
+		}
+		return result;
+	}
 }

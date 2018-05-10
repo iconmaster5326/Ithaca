@@ -2,6 +2,7 @@ package info.iconmaster.ithaca.eval;
 
 import info.iconmaster.ithaca.object.IthacaObject;
 import info.iconmaster.ithaca.object.IthacaPair;
+import info.iconmaster.ithaca.object.IthacaSymbol;
 
 public class EvalStackFrame extends StackFrame {
 	public IthacaObject form;
@@ -24,8 +25,12 @@ public class EvalStackFrame extends StackFrame {
 				throw new IllegalArgumentException("Object not callable: "+pair.head);
 			}
 			
+			thread.frames.pop();
 			procedure.call(thread, argList);
+		} else if (form instanceof IthacaSymbol) {
+			// TODO
 		} else {
+			thread.frames.pop();
 			thread.recieved = form;
 		}
 	}

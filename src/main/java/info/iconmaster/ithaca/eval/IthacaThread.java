@@ -20,4 +20,14 @@ public class IthacaThread {
 	public void eval(IthacaObject form) {
 		frames.push(new EvalStackFrame(this, form));
 	}
+	
+	public IthacaObject run() {
+		if (done()) throw new RuntimeException("Attempted to run a stopped Ithaca thread");
+		
+		while (!done()) {
+			step();
+		}
+		
+		return recieved;
+	}
 }
