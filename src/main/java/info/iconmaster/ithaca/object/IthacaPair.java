@@ -9,4 +9,9 @@ public class IthacaPair extends IthacaObject {
 		this.head = head;
 		this.tail = tail;
 	}
+	
+	@Override
+	public String toString() {
+		return "("+head+" . "+tail+")";
+	}
 }
