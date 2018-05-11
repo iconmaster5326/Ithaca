@@ -30,8 +30,8 @@ public class IthacaReader {
 		case NUMBER:
 			return new IthacaNumber(new BigDecimal(t.value));
 		case L_PAREN:
-			IthacaObject result = null;
-			IthacaObject last = IthacaNull.NULL;
+			IthacaObject result = IthacaNull.NULL;
+			IthacaPair last = null;
 			
 			while (true) {
 				t = ts.next();
@@ -42,8 +42,14 @@ public class IthacaReader {
 				} else {
 					IthacaObject next = read(t, ts);
 					if (next == null) throw new IOException("Unexpected EOF while constructing list");
-					last = new IthacaPair(next, last);
-					if (result == null) result = last;
+					
+					if (last == null) {
+						result = last = new IthacaPair(next, IthacaNull.NULL);
+					} else {
+						IthacaPair pair = new IthacaPair(next, IthacaNull.NULL);
+						last.tail = pair;
+						last = pair;
+					}
 				}
 			}
 		default:

@@ -19,31 +19,33 @@ public class EvalStackFrame extends StackFrame {
 
 	@Override
 	public void step() {
-		if (form instanceof IthacaPair) {
-			IthacaPair pair = (IthacaPair) form;
-			IthacaRunnable procedure;
-			IthacaObject argList = pair.tail;
-			
-			if (pair.head instanceof IthacaRunnable) {
-				procedure = (IthacaRunnable) pair.head;
+		if (thread.recieved == null) {
+			if (form instanceof IthacaPair) {
+				// eval the head, and then execute it when we get the result
+				thread.eval(((IthacaPair)form).head);
+			} else if (form instanceof IthacaSymbol) {
+				// look it up in the scope
+				IthacaObject value = scope.getBinding((IthacaSymbol)form);
+				if (value == null) {
+					throw new IllegalArgumentException("Unbound symbol: "+form);
+				}
+				
+				thread.recieved = value;
+				thread.frames.pop();
 			} else {
-				throw new IllegalArgumentException("Object not callable: "+pair.head);
+				// it's a constant, leave it unchanged
+				thread.frames.pop();
+				thread.recieved = form;
 			}
+		} else {
+			// execute a func/macro
+			if (!(thread.recieved instanceof IthacaRunnable)) throw new IllegalArgumentException("Object not callable: "+thread.recieved);
+			IthacaRunnable procedure = (IthacaRunnable) thread.recieved;
+			IthacaObject argList = ((IthacaPair)form).tail;
 			
+			thread.recieved = null;
 			thread.frames.pop();
 			procedure.call(thread, argList);
-		} else if (form instanceof IthacaSymbol) {
-			// look it up in the scope
-			IthacaObject value = scope.getBinding((IthacaSymbol)form);
-			if (value == null) {
-				throw new IllegalArgumentException("Unbound symbol: "+form);
-			}
-			
-			thread.recieved = value;
-			thread.frames.pop();
-		} else {
-			thread.frames.pop();
-			thread.recieved = form;
 		}
 	}
 }
