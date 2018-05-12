@@ -10,7 +10,7 @@ import info.iconmaster.ithaca.parse.TokenStream;
 public class Ithaca {
 	public static void main(String[] args) throws IOException {
 		IthacaRuntime runtime = new IthacaRuntime(new GlobalScope());
-		runtime.spawn(IthacaReader.read(new TokenStream("(begin (define ret (begin/return ret ret)) (print ret) (ret 5))")));
+		runtime.spawn(IthacaReader.read(new TokenStream("(print (begin (print 1) (print 2) 3))")));
 		runtime.run();
 	}
 }

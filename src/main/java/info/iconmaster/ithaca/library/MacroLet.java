@@ -3,6 +3,7 @@ package info.iconmaster.ithaca.library;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.iconmaster.ithaca.eval.EvalBodyStackFrame;
 import info.iconmaster.ithaca.eval.EvalStackFrame;
 import info.iconmaster.ithaca.eval.IthacaThread;
 import info.iconmaster.ithaca.eval.Scope;
@@ -38,7 +39,7 @@ public class MacroLet extends IthacaMacro {
 				// run the body
 				thread.frames.pop();
 				
-				thread.frames.push(new BodyFrame(thread, scope, body));
+				thread.frames.push(new EvalBodyStackFrame(thread, scope, body));
 			} else {
 				// run the next binding value
 				Pair<IthacaSymbol, IthacaObject> binding = parsedBindings.get(0);
@@ -49,33 +50,6 @@ public class MacroLet extends IthacaMacro {
 		@Override
 		public StackFrame clone(IthacaThread thread) {
 			return new BindingsFrame(thread, scope, parsedBindings, body);
-		}
-	}
-	
-	private class BodyFrame extends StackFrame {
-		List<IthacaObject> toEval = new ArrayList<>();
-
-		private BodyFrame(IthacaThread thread, Scope scope, List<IthacaObject> body) {
-			super(thread, scope);
-			toEval.addAll(body);
-		}
-
-		@Override
-		public void step() {
-			if (toEval.isEmpty()) {
-				// let thread.recieved pass through to our caller
-				thread.frames.pop();
-			} else {
-				// discard thread.recieved and run the next expression
-				thread.recieved = null;
-				IthacaObject next = toEval.remove(0);
-				thread.frames.push(new EvalStackFrame(thread, scope, next));
-			}
-		}
-
-		@Override
-		public StackFrame clone(IthacaThread thread) {
-			return new BodyFrame(thread, scope, toEval);
 		}
 	}
 
