@@ -8,7 +8,7 @@ public abstract class StackFrame {
 		super();
 		this.thread = thread;
 		if (thread.frames.isEmpty()) {
-			scope = thread.globalScope;
+			scope = thread.threadScope;
 		} else {
 			scope = thread.frames.peek().scope;
 		}

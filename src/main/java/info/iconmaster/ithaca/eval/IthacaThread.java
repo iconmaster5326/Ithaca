@@ -7,24 +7,28 @@ import info.iconmaster.ithaca.object.IthacaObject;
 public class IthacaThread {
 	public Stack<StackFrame> frames = new Stack<>();
 	public IthacaObject recieved;
-	public Scope globalScope;
+	public Scope threadScope;
+	public IthacaRuntime runtime;
 	
-	public IthacaThread(Scope scope) {
-		this.globalScope = scope;
+	public IthacaThread(IthacaRuntime runtime) {
+		this.runtime = runtime;
+		this.threadScope = runtime.globalScope;
 	}
 	
-	public IthacaThread(StackFrame init) {
-		this.globalScope = init.scope;
-		frames.push(init);
+	public IthacaThread(IthacaRuntime runtime, Scope scope) {
+		this.runtime = runtime;
+		this.threadScope = scope;
 	}
 	
-	public IthacaThread(StackFrame init, Scope scope) {
-		this.globalScope = scope;
-		frames.push(init);
+	public IthacaThread(IthacaRuntime runtime, IthacaObject form) {
+		this.runtime = runtime;
+		this.threadScope = runtime.globalScope;
+		frames.push(new EvalStackFrame(this, runtime.globalScope, form));
 	}
 	
-	public IthacaThread(IthacaObject form, Scope scope) {
-		this.globalScope = scope;
+	public IthacaThread(IthacaRuntime runtime, IthacaObject form, Scope scope) {
+		this.runtime = runtime;
+		this.threadScope = scope;
 		frames.push(new EvalStackFrame(this, scope, form));
 	}
 	
@@ -52,11 +56,11 @@ public class IthacaThread {
 	}
 	
 	public Scope scope() {
-		return frames.isEmpty() ? globalScope : frames.peek().scope;
+		return frames.isEmpty() ? threadScope : frames.peek().scope;
 	}
 	
 	public IthacaThread clone() {
-		IthacaThread result = new IthacaThread(globalScope);
+		IthacaThread result = new IthacaThread(runtime, threadScope);
 		for (StackFrame frame : frames) {
 			result.frames.push(frame.clone(result));
 		}
@@ -65,7 +69,7 @@ public class IthacaThread {
 	
 	public void replaceWith(IthacaThread other) {
 		this.frames.clear();
-		this.globalScope = other.globalScope;
+		this.threadScope = other.threadScope;
 		
 		for (StackFrame frame : other.frames) {
 			frames.push(frame.clone(this));
