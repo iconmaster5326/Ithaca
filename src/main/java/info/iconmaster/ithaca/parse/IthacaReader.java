@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.iconmaster.ithaca.eval.IthacaThread;
+import info.iconmaster.ithaca.eval.Scope;
 import info.iconmaster.ithaca.object.IthacaNull;
 import info.iconmaster.ithaca.object.IthacaNumber;
 import info.iconmaster.ithaca.object.IthacaObject;
@@ -15,15 +17,31 @@ import info.iconmaster.ithaca.parse.Token.Type;
 import info.iconmaster.ithaca.util.ListUtils;
 
 public class IthacaReader {
-	private IthacaReader() {}
+	public IthacaThread thread;
+	public Scope scope;
+	public TokenStream tokenStream;
 	
-	private static IthacaObject read(Token t, TokenStream ts) throws IOException {
+	public IthacaReader(TokenStream ts, IthacaThread thread, Scope scope) {
+		super();
+		this.tokenStream = ts;
+		this.thread = thread;
+		this.scope = scope;
+	}
+	
+	public IthacaReader(TokenStream ts, IthacaThread thread) {
+		super();
+		this.tokenStream = ts;
+		this.thread = thread;
+		this.scope = thread.scope();
+	}
+
+	private IthacaObject read(Token t) throws IOException {
 		if (t == null) return null;
 		
 		switch (t.type) {
 		case COMMENT:
 		case WHITESPACE:
-			return read(ts.next(), ts);
+			return read();
 		case WORD:
 			return IthacaSymbol.intern(t.value);
 		case STRING:
@@ -36,7 +54,7 @@ public class IthacaReader {
 			boolean hadDot = false;
 			
 			while (true) {
-				t = ts.next();
+				t = tokenStream.next();
 				if (t == null) {
 					throw new IOException("Unexpected EOF while constructing list");
 				} else if (t.type == Type.WHITESPACE || t.type == Type.COMMENT) {
@@ -46,7 +64,7 @@ public class IthacaReader {
 				} else if (hadDot) {
 					throw new IOException("Illegal dotted list form");
 				} else if (t.type == Type.DOT) {
-					IthacaObject next = read(ts.next(), ts);
+					IthacaObject next = read(tokenStream.next());
 					if (next == null) throw new IOException("Unexpected EOF while constructing list");
 					
 					if (last == null) {
@@ -56,7 +74,7 @@ public class IthacaReader {
 						hadDot = true;
 					}
 				} else {
-					IthacaObject next = read(t, ts);
+					IthacaObject next = read(t);
 					if (next == null) throw new IOException("Unexpected EOF while constructing list");
 					
 					if (last == null) {
@@ -69,26 +87,32 @@ public class IthacaReader {
 				}
 			}
 		case QUOTE:
-			return ListUtils.wrapList(IthacaSymbol.intern("quote"), read(ts.next(), ts));
+			return ListUtils.wrapList(IthacaSymbol.intern("quote"), read());
 		case QUASIQUOTE:
-			return ListUtils.wrapList(IthacaSymbol.intern("quasiquote"), read(ts.next(), ts));
+			return ListUtils.wrapList(IthacaSymbol.intern("quasiquote"), read());
 		case UNQUOTE:
-			return ListUtils.wrapList(IthacaSymbol.intern("unquote"), read(ts.next(), ts));
+			return ListUtils.wrapList(IthacaSymbol.intern("unquote"), read());
 		case UNQUOTE_SPLICING:
-			return ListUtils.wrapList(IthacaSymbol.intern("unquote-splicing"), read(ts.next(), ts));
+			return ListUtils.wrapList(IthacaSymbol.intern("unquote-splicing"), read());
+		case READ_SYNTAX:
+			Token identifier = tokenStream.next();
+			if (identifier == null) throw new IOException("Unexpected EOF while parsing read syntax");
+			ReadSyntax rs = scope.getReadSyntax(identifier.value);
+			if (rs == null) throw new IOException("Unknown read syntax identifier #"+identifier.value);
+			return rs.read(this);
 		default:
 			throw new IOException("Unexpected token type "+t.type+": "+t.value);
 		}
 	}
 	
-	public static IthacaObject read(TokenStream ts) throws IOException {
-		return read(ts.next(), ts);
+	public IthacaObject read() throws IOException {
+		return read(tokenStream.next());
 	}
 	
-	public static List<IthacaObject> readAll(TokenStream ts) throws IOException {
+	public List<IthacaObject> readAll() throws IOException {
 		IthacaObject o;
 		List<IthacaObject> result = new ArrayList<>();
-		while ((o = read(ts)) != null) {
+		while ((o = read()) != null) {
 			result.add(o);
 		}
 		return result;

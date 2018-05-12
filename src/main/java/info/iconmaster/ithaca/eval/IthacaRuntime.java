@@ -1,5 +1,6 @@
 package info.iconmaster.ithaca.eval;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -43,8 +44,14 @@ public class IthacaRuntime {
 	public void spawn(IthacaObject form) {
 		threads.add(new IthacaThread(this, form));
 	}
-	
 	public void spawn(IthacaObject form, Scope scope) {
+		threads.add(new IthacaThread(this, form, scope));
+	}
+	
+	public void spawn(String form) throws IOException {
+		threads.add(new IthacaThread(this, form));
+	}
+	public void spawn(String form, Scope scope) throws IOException {
 		threads.add(new IthacaThread(this, form, scope));
 	}
 }

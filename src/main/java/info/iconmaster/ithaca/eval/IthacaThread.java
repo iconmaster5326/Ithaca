@@ -1,8 +1,11 @@
 package info.iconmaster.ithaca.eval;
 
+import java.io.IOException;
 import java.util.Stack;
 
 import info.iconmaster.ithaca.object.IthacaObject;
+import info.iconmaster.ithaca.parse.IthacaReader;
+import info.iconmaster.ithaca.parse.TokenStream;
 
 public class IthacaThread {
 	public Stack<StackFrame> frames = new Stack<>();
@@ -14,22 +17,27 @@ public class IthacaThread {
 		this.runtime = runtime;
 		this.threadScope = runtime.globalScope;
 	}
-	
 	public IthacaThread(IthacaRuntime runtime, Scope scope) {
 		this.runtime = runtime;
 		this.threadScope = scope;
 	}
 	
 	public IthacaThread(IthacaRuntime runtime, IthacaObject form) {
-		this.runtime = runtime;
-		this.threadScope = runtime.globalScope;
-		frames.push(new EvalStackFrame(this, runtime.globalScope, form));
+		this(runtime);
+		eval(form);
+	}
+	public IthacaThread(IthacaRuntime runtime, IthacaObject form, Scope scope) {
+		this(runtime, scope);
+		eval(form, scope);
 	}
 	
-	public IthacaThread(IthacaRuntime runtime, IthacaObject form, Scope scope) {
-		this.runtime = runtime;
-		this.threadScope = scope;
-		frames.push(new EvalStackFrame(this, scope, form));
+	public IthacaThread(IthacaRuntime runtime, String s) throws IOException {
+		this(runtime);
+		eval(s);
+	}
+	public IthacaThread(IthacaRuntime runtime, String s, Scope scope) throws IOException {
+		this(runtime, scope);
+		eval(s, scope);
 	}
 	
 	public void step() {
@@ -42,7 +50,17 @@ public class IthacaThread {
 	}
 	
 	public void eval(IthacaObject form) {
-		frames.push(new EvalStackFrame(this, form));
+		eval(form, scope());
+	}
+	public void eval(IthacaObject form, Scope scope) {
+		frames.push(new EvalStackFrame(this, scope, form));
+	}
+	
+	public void eval(String s) throws IOException {
+		eval(s, scope());
+	}
+	public void eval(String s, Scope scope) throws IOException {
+		frames.push(new EvalBodyStackFrame(this, scope, new IthacaReader(new TokenStream(s), this, scope).readAll()));
 	}
 	
 	public IthacaObject run() {
