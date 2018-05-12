@@ -14,5 +14,6 @@ public class GlobalScope extends Scope {
 		defineBinding(IthacaSymbol.intern("func"), new MacroFunc());
 		defineBinding(IthacaSymbol.intern("macro"), new MacroMacro());
 		defineBinding(IthacaSymbol.intern("quote"), new MacroQuote());
+		defineBinding(IthacaSymbol.intern("let"), new MacroLet());
 	}
 }
