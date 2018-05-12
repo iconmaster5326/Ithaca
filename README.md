@@ -14,7 +14,7 @@ Lisp has many desirable and/or interesting properties for a programming language
 ## What Changes Are We Talking About?
 
 Here's a short list:
-* Many functions have been renamed so their names actually make sense. `lambda` is `func`, `car` is `head`, `cdr` is `behead`, just to name a few.
+* Many functions have been renamed so their names actually make sense. `lambda` is `func`, `car` is `head`, `cdr` is `tail`, just to name a few.
 * There is only one `let`, which works like the best of all `let`s: Names are bound, then values are evaluated and given to the names in sequence.
 * Multiple returns are gone! Why? Because when you want to obtain multiple values from a function, it's often a pain to do so. Just return a list instead. Plus, it lets us simplify the syntax of stuff like `let` in neat ways.
 * Generic functions are the norm! At one time, you had many functions to do one thing- If you want to find the length of something, there's `length`, `vector-length`, `string-length`... The list goes on. Now, `length` just plain works on all those data types.
@@ -43,9 +43,9 @@ Yes.
   )
 )
 
-(define behead (let (super head) (func (x)
+(define tail (let (super head) (func (x)
   (if (stream? x)
-    (behead ((get-value x)))
+    (tail ((get-value x)))
     (super x)
   )
 )
