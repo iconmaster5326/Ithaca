@@ -12,6 +12,7 @@ import info.iconmaster.ithaca.object.IthacaPair;
 import info.iconmaster.ithaca.object.IthacaString;
 import info.iconmaster.ithaca.object.IthacaSymbol;
 import info.iconmaster.ithaca.parse.Token.Type;
+import info.iconmaster.ithaca.util.ListUtils;
 
 public class IthacaReader {
 	private IthacaReader() {}
@@ -67,6 +68,14 @@ public class IthacaReader {
 					}
 				}
 			}
+		case QUOTE:
+			return ListUtils.wrapList(IthacaSymbol.intern("quote"), read(ts.next(), ts));
+		case QUASIQUOTE:
+			return ListUtils.wrapList(IthacaSymbol.intern("quasiquote"), read(ts.next(), ts));
+		case UNQUOTE:
+			return ListUtils.wrapList(IthacaSymbol.intern("unquote"), read(ts.next(), ts));
+		case UNQUOTE_SPLICING:
+			return ListUtils.wrapList(IthacaSymbol.intern("unquote-splicing"), read(ts.next(), ts));
 		default:
 			throw new IOException("Unexpected token type "+t.type+": "+t.value);
 		}

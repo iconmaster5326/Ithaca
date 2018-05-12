@@ -9,7 +9,7 @@ import info.iconmaster.ithaca.parse.TokenStream;
 
 public class Ithaca {
 	public static void main(String[] args) throws IOException {
-		IthacaThread thread = new IthacaThread(IthacaReader.read(new TokenStream("((func (x . y) y) 1 2 3)")), new GlobalScope());
+		IthacaThread thread = new IthacaThread(IthacaReader.read(new TokenStream("((macro () '(pair 1 2)))")), new GlobalScope());
 		System.out.println(thread.run());
 	}
 }
