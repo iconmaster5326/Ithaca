@@ -39,6 +39,10 @@ public class Scope {
 		bindings.put(symbol, value);
 	}
 	
+	public void defineBindings(Map<IthacaSymbol, IthacaObject> binds) {
+		bindings.putAll(binds);
+	}
+	
 	private boolean setBindingImpl(IthacaSymbol symbol, IthacaObject value) {
 		if (bindings.containsKey(symbol)) {
 			bindings.put(symbol, value);
