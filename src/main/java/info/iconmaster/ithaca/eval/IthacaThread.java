@@ -1,5 +1,6 @@
 package info.iconmaster.ithaca.eval;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Stack;
 
@@ -40,6 +41,15 @@ public class IthacaThread {
 		eval(s, scope);
 	}
 	
+	public IthacaThread(IthacaRuntime runtime, File f) throws IOException {
+		this(runtime);
+		eval(f);
+	}
+	public IthacaThread(IthacaRuntime runtime, File f, Scope scope) throws IOException {
+		this(runtime, scope);
+		eval(f, scope);
+	}
+	
 	public void step() {
 		if (done()) throw new RuntimeException("Attempted to run a stopped Ithaca thread");
 		frames.peek().step();
@@ -61,6 +71,13 @@ public class IthacaThread {
 	}
 	public void eval(String s, Scope scope) throws IOException {
 		frames.push(new EvalBodyStackFrame(this, scope, new IthacaReader(new TokenStream(s), this, scope).readAll()));
+	}
+	
+	public void eval(File f) throws IOException {
+		eval(f, scope());
+	}
+	public void eval(File f, Scope scope) throws IOException {
+		frames.push(new EvalBodyStackFrame(this, scope, new IthacaReader(new TokenStream(f), this, scope).readAll()));
 	}
 	
 	public IthacaObject run() {

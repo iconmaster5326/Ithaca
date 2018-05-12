@@ -1,5 +1,6 @@
 package info.iconmaster.ithaca.eval;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,13 @@ public class IthacaRuntime {
 		threads.add(new IthacaThread(this, form));
 	}
 	public void spawn(String form, Scope scope) throws IOException {
+		threads.add(new IthacaThread(this, form, scope));
+	}
+	
+	public void spawn(File form) throws IOException {
+		threads.add(new IthacaThread(this, form));
+	}
+	public void spawn(File form, Scope scope) throws IOException {
 		threads.add(new IthacaThread(this, form, scope));
 	}
 }
