@@ -160,8 +160,10 @@ public class TokenStream {
 		}
 	}
 	
-	private Token finish() {
-		if (token == null) {
+	private Token finish() throws IOException {
+		if (stringMode) {
+			throw new IOException("Unexpected EOF while reading string");
+		} else if (token == null) {
 			return null;
 		} else {
 			Token result = token;
