@@ -9,7 +9,7 @@ import info.iconmaster.ithaca.library.GlobalScope;
 public class Ithaca {
 	public static void main(String[] args) throws IOException {
 		IthacaRuntime runtime = new IthacaRuntime(new GlobalScope());
-		runtime.spawn(new File("test.scm"));
+		runtime.spawn(new File("test.ithaca"));
 		runtime.run();
 	}
 }
