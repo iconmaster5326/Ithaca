@@ -9,11 +9,13 @@ public class GlobalScope extends Scope {
 		defineBinding(IthacaSymbol.intern("pair"), new FuncPair());
 		defineBinding(IthacaSymbol.intern("head"), new FuncHead());
 		defineBinding(IthacaSymbol.intern("tail"), new FuncTail());
+		defineBinding(IthacaSymbol.intern("print"), new FuncPrint());
 		
 		defineBinding(IthacaSymbol.intern("define"), new MacroDefine());
 		defineBinding(IthacaSymbol.intern("func"), new MacroFunc());
 		defineBinding(IthacaSymbol.intern("macro"), new MacroMacro());
 		defineBinding(IthacaSymbol.intern("quote"), new MacroQuote());
 		defineBinding(IthacaSymbol.intern("let"), new MacroLet());
+		defineBinding(IthacaSymbol.intern("begin/return"), new MacroBeginReturn());
 	}
 }

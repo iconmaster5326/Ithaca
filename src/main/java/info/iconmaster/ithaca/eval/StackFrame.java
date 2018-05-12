@@ -8,7 +8,7 @@ public abstract class StackFrame {
 		super();
 		this.thread = thread;
 		if (thread.frames.isEmpty()) {
-			scope = thread.globalFenv;
+			scope = thread.globalScope;
 		} else {
 			scope = thread.frames.peek().scope;
 		}
@@ -20,5 +20,6 @@ public abstract class StackFrame {
 		this.scope = scope;
 	}
 	
+	public abstract StackFrame clone(IthacaThread thread);
 	public abstract void step();
 }

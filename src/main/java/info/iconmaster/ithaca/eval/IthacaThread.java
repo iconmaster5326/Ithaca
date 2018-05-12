@@ -7,24 +7,24 @@ import info.iconmaster.ithaca.object.IthacaObject;
 public class IthacaThread {
 	public Stack<StackFrame> frames = new Stack<>();
 	public IthacaObject recieved;
-	public Scope globalFenv;
+	public Scope globalScope;
 	
 	public IthacaThread(Scope scope) {
-		this.globalFenv = scope;
+		this.globalScope = scope;
 	}
 	
 	public IthacaThread(StackFrame init) {
-		this.globalFenv = init.scope;
+		this.globalScope = init.scope;
 		frames.push(init);
 	}
 	
 	public IthacaThread(StackFrame init, Scope scope) {
-		this.globalFenv = scope;
+		this.globalScope = scope;
 		frames.push(init);
 	}
 	
 	public IthacaThread(IthacaObject form, Scope scope) {
-		this.globalFenv = scope;
+		this.globalScope = scope;
 		frames.push(new EvalStackFrame(this, scope, form));
 	}
 	
@@ -52,6 +52,23 @@ public class IthacaThread {
 	}
 	
 	public Scope scope() {
-		return frames.isEmpty() ? globalFenv : frames.peek().scope;
+		return frames.isEmpty() ? globalScope : frames.peek().scope;
+	}
+	
+	public IthacaThread clone() {
+		IthacaThread result = new IthacaThread(globalScope);
+		for (StackFrame frame : frames) {
+			result.frames.push(frame.clone(result));
+		}
+		return result;
+	}
+	
+	public void replaceWith(IthacaThread other) {
+		this.frames.clear();
+		this.globalScope = other.globalScope;
+		
+		for (StackFrame frame : other.frames) {
+			frames.push(frame.clone(this));
+		}
 	}
 }

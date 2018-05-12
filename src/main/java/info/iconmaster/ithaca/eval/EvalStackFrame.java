@@ -48,4 +48,9 @@ public class EvalStackFrame extends StackFrame {
 			procedure.call(thread, argList);
 		}
 	}
+	
+	@Override
+	public StackFrame clone(IthacaThread thread) {
+		return new EvalStackFrame(thread, scope, form);
+	}
 }

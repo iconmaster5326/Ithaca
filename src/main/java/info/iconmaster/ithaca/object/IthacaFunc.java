@@ -34,6 +34,11 @@ public abstract class IthacaFunc extends IthacaObject implements IthacaRunnable 
 				thread.recieved = callFunc(thread, ListUtils.wrapDottedList(doneEval));
 			}
 		}
+		
+		@Override
+		public StackFrame clone(IthacaThread thread) {
+			return new Frame(thread, toEval);
+		}
 	}
 	
 	public abstract IthacaObject callFunc(IthacaThread thread, IthacaObject argList);
