@@ -32,7 +32,7 @@ public class TokenStream {
 	 * @return
 	 * @throws IOException
 	 */
-	private Integer readCodepoint(Reader in) throws IOException {
+	public Integer readCodepoint(Reader in) throws IOException {
 		String result;
 		
 		int i16 = in.read(); // UTF-16 as int

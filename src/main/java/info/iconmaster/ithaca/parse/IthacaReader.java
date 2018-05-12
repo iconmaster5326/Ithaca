@@ -32,13 +32,28 @@ public class IthacaReader {
 		case L_PAREN:
 			IthacaObject result = IthacaNull.NULL;
 			IthacaPair last = null;
+			boolean hadDot = false;
 			
 			while (true) {
 				t = ts.next();
 				if (t == null) {
 					throw new IOException("Unexpected EOF while constructing list");
+				} else if (t.type == Type.WHITESPACE || t.type == Type.COMMENT) {
+					continue;
 				} else if (t.type == Type.R_PAREN) {
 					return result;
+				} else if (hadDot) {
+					throw new IOException("Illegal dotted list form");
+				} else if (t.type == Type.DOT) {
+					IthacaObject next = read(ts.next(), ts);
+					if (next == null) throw new IOException("Unexpected EOF while constructing list");
+					
+					if (last == null) {
+						throw new IOException("Illegal dotted list form");
+					} else {
+						last.tail = next;
+						hadDot = true;
+					}
 				} else {
 					IthacaObject next = read(t, ts);
 					if (next == null) throw new IOException("Unexpected EOF while constructing list");
