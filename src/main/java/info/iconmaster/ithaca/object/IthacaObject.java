@@ -5,4 +5,8 @@ public abstract class IthacaObject {
 	public String toString() {
 		return "#<"+getClass().getName()+"@"+Long.toHexString(getClass().hashCode())+">";
 	}
+	
+	public boolean isTruthy() {
+		return true;
+	}
 }

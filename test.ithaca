@@ -1,1 +1,6 @@
-(print "Hello, World!")
+(print "BEGIN")
+(if #f
+  (print "True!")
+  (print "False!")
+)
+(print "END")

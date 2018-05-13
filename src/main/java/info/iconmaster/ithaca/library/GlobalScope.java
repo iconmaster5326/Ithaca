@@ -24,6 +24,7 @@ public class GlobalScope extends Scope {
 		defineBinding(IthacaSymbol.intern("quote"), new MacroQuote());
 		defineBinding(IthacaSymbol.intern("let"), new MacroLet());
 		defineBinding(IthacaSymbol.intern("begin/return"), new MacroBeginReturn());
+		defineBinding(IthacaSymbol.intern("if"), new MacroIf());
 		
 		// read syntax
 		defineReadSyntax(new ReadSyntax("t") {

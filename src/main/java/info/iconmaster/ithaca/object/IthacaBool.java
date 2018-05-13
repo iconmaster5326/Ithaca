@@ -14,4 +14,13 @@ public class IthacaBool extends IthacaObject {
 			return "#f";
 		}
 	}
+	
+	@Override
+	public boolean isTruthy() {
+		if (this == TRUE) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
