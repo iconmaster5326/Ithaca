@@ -1,4 +1,4 @@
-package info.iconmaster.ithaca.library;
+package info.iconmaster.ithaca.library.core;
 
 import java.util.ArrayList;
 import java.util.List;

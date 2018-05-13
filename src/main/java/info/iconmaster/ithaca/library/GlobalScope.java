@@ -1,6 +1,18 @@
 package info.iconmaster.ithaca.library;
 
 import info.iconmaster.ithaca.eval.Scope;
+import info.iconmaster.ithaca.library.core.MacroBegin;
+import info.iconmaster.ithaca.library.core.MacroBeginReturn;
+import info.iconmaster.ithaca.library.core.MacroDefine;
+import info.iconmaster.ithaca.library.core.MacroFunc;
+import info.iconmaster.ithaca.library.core.MacroIf;
+import info.iconmaster.ithaca.library.core.MacroLet;
+import info.iconmaster.ithaca.library.core.MacroMacro;
+import info.iconmaster.ithaca.library.core.MacroQuote;
+import info.iconmaster.ithaca.library.io.FuncPrint;
+import info.iconmaster.ithaca.library.list.FuncHead;
+import info.iconmaster.ithaca.library.list.FuncPair;
+import info.iconmaster.ithaca.library.list.FuncTail;
 import info.iconmaster.ithaca.object.IthacaBool;
 import info.iconmaster.ithaca.object.IthacaObject;
 import info.iconmaster.ithaca.object.IthacaSymbol;

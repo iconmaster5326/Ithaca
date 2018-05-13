@@ -1,4 +1,4 @@
-package info.iconmaster.ithaca.library;
+package info.iconmaster.ithaca.library.core;
 
 import info.iconmaster.ithaca.eval.EvalBodyStackFrame;
 import info.iconmaster.ithaca.eval.IthacaThread;

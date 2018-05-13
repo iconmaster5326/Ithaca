@@ -1,4 +1,4 @@
-package info.iconmaster.ithaca.library;
+package info.iconmaster.ithaca.library.list;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import info.iconmaster.ithaca.object.IthacaObject;
 import info.iconmaster.ithaca.object.IthacaPair;
 import info.iconmaster.ithaca.util.ListUtils;
 
-public class FuncTail extends IthacaFunc {
+public class FuncHead extends IthacaFunc {
 	@Override
 	public IthacaObject callFunc(IthacaThread thread, IthacaObject argList) {
 		List<IthacaObject> args = ListUtils.unwrapProperList(argList);
@@ -18,6 +18,6 @@ public class FuncTail extends IthacaFunc {
 		}
 		IthacaPair pair = (IthacaPair) args.get(0);
 		
-		return pair.tail;
+		return pair.head;
 	}
 }

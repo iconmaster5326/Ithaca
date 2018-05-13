@@ -1,4 +1,4 @@
-package info.iconmaster.ithaca.library;
+package info.iconmaster.ithaca.library.list;
 
 import java.util.List;
 

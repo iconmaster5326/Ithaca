@@ -1,4 +1,4 @@
-package info.iconmaster.ithaca.library;
+package info.iconmaster.ithaca.library.core;
 
 import java.util.List;
 
@@ -6,37 +6,39 @@ import info.iconmaster.ithaca.eval.IthacaThread;
 import info.iconmaster.ithaca.eval.StackFrame;
 import info.iconmaster.ithaca.object.IthacaMacro;
 import info.iconmaster.ithaca.object.IthacaObject;
-import info.iconmaster.ithaca.object.IthacaSymbol;
-import info.iconmaster.ithaca.object.IthacaVoid;
 import info.iconmaster.ithaca.util.ListUtils;
 
-public class MacroDefine extends IthacaMacro {
+public class MacroIf extends IthacaMacro {
 	private class Frame extends StackFrame {
-		IthacaSymbol sym;
+		IthacaObject ifT, ifF;
 		
-		private Frame(IthacaThread thread, IthacaSymbol sym) {
+		public Frame(IthacaThread thread, IthacaObject ifT, IthacaObject ifF) {
 			super(thread);
-			this.sym = sym;
+			this.ifF = ifF;
+			this.ifT = ifT;
 		}
-
+		
 		@Override
 		public void step() {
-			thread.scope().defineBinding(sym, thread.recieved);
-			thread.recieved = IthacaVoid.VOID;
+			boolean truthy = thread.recieved.isTruthy();
+			thread.recieved = null;
+			
 			thread.frames.pop();
+			thread.eval(truthy ? ifT : ifF);
 		}
-
+		
 		@Override
 		public StackFrame clone(IthacaThread thread) {
-			return new Frame(thread, sym);
+			return new Frame(thread, ifT, ifF);
 		}
 	}
-
+	
 	@Override
 	public IthacaObject callMacro(IthacaThread thread, IthacaObject argList) {
 		List<IthacaObject> args = ListUtils.unwrapProperList(argList);
-		thread.frames.push(new Frame(thread, (IthacaSymbol) args.get(0)));
-		thread.eval(args.get(1));
+		
+		thread.frames.push(new Frame(thread, args.get(1), args.get(2)));
+		thread.eval(args.get(0));
 		return null;
 	}
 }
